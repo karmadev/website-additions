@@ -11,12 +11,13 @@ let imageLogo;
 let karmaLogo;
 
 let tempImage = new Image;
+tempImage.crossOrigin="anonymous";
 tempImage.onload = function () {
     karmaLogo = tempImage;
     drawImage();
 }
 
-tempImage.src = "https://assets-global.website-files.com/60d3845efcce87041e646ddc/60d3845efcce87aa6c646dfd_Primary.png";
+tempImage.src = "images/powered.png";
 
 WebFont.load({
     google: {
@@ -56,7 +57,7 @@ function drawImage() {
 
     //Draw the Karma logotype
     if(karmaLogo != null) {
-        let w = 100;
+        let w = 150;
         let h = 50;
         let offsetY = size - 80;
         ctx.fillRect(size/2-w/2, offsetY, w, h);
@@ -68,6 +69,7 @@ function handleImage(e){
     let reader = new FileReader();
     reader.onload = function(event){
         let img = new Image();
+        img.crossOrigin="anonymous";
         img.onload = function(){
             imageLogo = img;
             drawImage();
@@ -80,6 +82,7 @@ function handleImage(e){
 
         img.src = event.target.result;
     }
+
     reader.readAsDataURL(e.target.files[0]);
 }
 

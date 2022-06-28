@@ -35,14 +35,14 @@
             </fieldset>
         </div>
 
-        <h2>Logotype</h2>
+        <h5>Logotype</h5>
         <div>
             <label for="imageLoader">Top logotype</label>
             <input type="file" id="imageLoader" name="imageLoader"/><br/>
             <span style="color:#aaa;font-size: 12px;">Will be resized to 200x100px</span>
         </div>
 
-        <h2>QR Code & URL</h2>
+        <h5>QR Code & URL</h5>
         <div>
             Storefront URL:
             <input value="temp" id="storefrontURL" type="text" oninput="updateQR();"><br/>
@@ -52,7 +52,7 @@
             <button onclick="updateCode()">Update QR-code</button>
         </div>
 
-        <h2>Colors</h2>
+        <h5>Colors</h5>
         <div>
             <input type="color" id="backgroundColor" name="backgroundColor"
                    value="#000000" oninput="updateCode(false);">
@@ -70,7 +70,7 @@
             <label for="qrColor">QR Code Color</label>
         </div>
 
-        <h2>Texts</h2>
+        <h5>Texts</h5>
         <div>
             <label for="defaultTexts">Default texts</label>
             <input id="defaultTexts" checked oninput="updateTexts();" type="checkbox">
@@ -101,7 +101,7 @@
         </div>
 
 
-        <h2>Debug</h2>
+        <h5>Debug</h5>
         <div>
             <label for="safetyMargin">Safety margin (mm):</label>
             <input value="4" id="safetyMargin" type="text" oninput="updateCode();"><br />
