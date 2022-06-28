@@ -2,7 +2,8 @@ let canvas = document.getElementById("qr-code");
 let ctx = canvas.getContext("2d");
 
 //Get the width & height of the canvas
-let size = canvas.width;
+const size = canvas.width;
+const radius = size/2;
 
 let sizeMultiplier = 3.527777366203752; //From 283px to 1000 in this tool!
 let centerRadiusOffset = 3.2;
@@ -10,11 +11,93 @@ let centerRadiusOffset = 3.2;
 let imageLogo;
 let karmaLogo;
 
+let defaults = {
+    "circle" : {
+        shape: {
+            type: "circle"
+        },
+        logo: {
+            w: 200,
+            h: 100,
+            offset_y: 40
+        },
+        title: {
+            offset_x: radius,
+            offset_y: radius-225,
+            fontsize: 40
+        },
+        subtitle : {
+            offset_x: radius,
+            offset_y: radius-10,
+            fontsize: 12
+        },
+        tableTitle : {
+            offset_x: radius + radius/centerRadiusOffset,
+            offset_y: radius+100,
+            fontsize: 15.66
+        },
+        tableNumber : {
+            offset_x: radius + radius/centerRadiusOffset,
+            offset_y: radius+250,
+            fontsize: 47.45
+        },
+        bottomTitle : {
+            offset_x: radius,
+            offset_y: radius*2-110,
+            fontsize: 10
+        },
+        QRCode : {
+            offset_x: radius,
+            offset_y: radius-10,
+        }
+    },
+    "square1" : {
+        shape: {
+            type: "rect",
+            radius: 140
+        },
+        logo: {
+            w: 250,
+            h: 125,
+            offset_y: 30
+        },
+        title: {
+            offset_x: radius,
+            offset_y: radius-225,
+            fontsize: 40
+        },
+        subtitle : {
+            offset_x: radius,
+            offset_y: radius-10,
+            fontsize: 12
+        },
+        tableTitle : {
+            offset_x: radius + radius/centerRadiusOffset,
+            offset_y: radius+100,
+            fontsize: 16
+        },
+        tableNumber : {
+            offset_x: radius + radius/centerRadiusOffset,
+            offset_y: radius+250,
+            fontsize: 49
+        },
+        bottomTitle : {
+            offset_x: radius,
+            offset_y: radius*2-110,
+            fontsize: 12
+        },
+        QRCode : {
+            offset_x: radius,
+            offset_y: radius-10,
+        }
+    }
+}
+
 let tempImage = new Image;
 tempImage.crossOrigin="anonymous";
 tempImage.onload = function () {
     karmaLogo = tempImage;
-    drawImage();
+    updateCode();
 }
 
 tempImage.src = "https://raw.githubusercontent.com/karmadev/website-additions/master/images/powered.png";
@@ -46,20 +129,24 @@ const coverImg = (img, type, winW, winH, offsetX, offsetY, context) => {
 }
 
 function drawImage() {
+    //Find out which style we're using
+    let selected = document.querySelector('input[name="design"]:checked').value;
+    let def = defaults[selected];
+
     ctx.fillStyle = document.getElementById("backgroundColor").value;
     if(imageLogo != null) {
-        let w = 200;
-        let h = 100;
-        let offsetY = 40;
+        let w = def.logo.w;
+        let h = def.logo.h;
+        let offsetY = def.logo.offset_y;
         ctx.fillRect(size/2-w/2, offsetY, w, h);
         coverImg(imageLogo, 'contain', w, h, size/2-w/2, offsetY, ctx);
     }
 
     //Draw the Karma logotype
     if(karmaLogo != null) {
-        let w = 150;
-        let h = 50;
-        let offsetY = size - 80;
+        let w = 200;
+        let h = 70;
+        let offsetY = size - 100;
         ctx.fillRect(size/2-w/2, offsetY, w, h);
         coverImg(karmaLogo, 'contain', w, h, size/2-w/2, offsetY, ctx);
     }
@@ -87,7 +174,7 @@ function handleImage(e){
 }
 
 function roundRect(
-    ctx,
+    context,
     x,
     y,
     width,
@@ -101,35 +188,35 @@ function roundRect(
     } else {
         radius = {...{tl: 0, tr: 0, br: 0, bl: 0}, ...radius};
     }
-    ctx.beginPath();
-    ctx.moveTo(x + radius.tl, y);
-    ctx.lineTo(x + width - radius.tr, y);
-    ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
-    ctx.lineTo(x + width, y + height - radius.br);
-    ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
-    ctx.lineTo(x + radius.bl, y + height);
-    ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
-    ctx.lineTo(x, y + radius.tl);
-    ctx.quadraticCurveTo(x, y, x + radius.tl, y);
-    ctx.closePath();
+    context.beginPath();
+    context.moveTo(x + radius.tl, y);
+    context.lineTo(x + width - radius.tr, y);
+    context.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+    context.lineTo(x + width, y + height - radius.br);
+    context.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+    context.lineTo(x + radius.bl, y + height);
+    context.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+    context.lineTo(x, y + radius.tl);
+    context.quadraticCurveTo(x, y, x + radius.tl, y);
+    context.closePath();
     if (fill) {
-        ctx.fill();
+        context.fill();
     }
     if (stroke) {
-        ctx.stroke();
+        context.stroke();
     }
 }
 
 function getText(name) {
     let defaultTexts = document.getElementById("defaultTexts").checked;
-    let defaults = {
+    let textDefaults = {
         textTitle : {
             se : "Beställ &--betala här",
             en : "Order &--pay here"
         },
         textTitleSquare : {
-            se : "Beställ & betala här",
-            en : "Order & pay here"
+            se : "Beställ &--betala här",
+            en : "Order &--pay here"
         },
         textSubtitle : {
             se : "Skanna QR-koden med din mobil",
@@ -149,7 +236,7 @@ function getText(name) {
     let lang = document.getElementById("defaultLanguage").value;
 
     if(defaultTexts) {
-        return defaults[name][lang];
+        return textDefaults[name][lang];
     } else {
         if(name === "textTitleSquare") {
             name = "textTitle"; //Correct the default fetch
@@ -188,64 +275,7 @@ function updateTexts() {
 
 function updateCode(updateCodeToo = true) {
 
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = canvas.width/2;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-
-    let defaults = {
-        "circle" : {
-            shape: {
-                type: "circle"
-            },
-            title: {
-                offset_x: radius,
-                offset_y: radius-225,
-                fontsize: 40
-            },
-            subtitle : {
-                offset_x: radius,
-                offset_y: radius-10,
-                fontsize: 12
-            },
-            tableTitle : {
-                offset_x: radius + radius/centerRadiusOffset,
-                offset_y: radius+100,
-                fontsize: 15.66
-            },
-            tableNumber : {
-                offset_x: radius + radius/centerRadiusOffset,
-                offset_y: radius+250,
-                fontsize: 47.45
-            },
-            bottomTitle : {
-                offset_x: radius,
-                offset_y: radius*2-100,
-                fontsize: 10
-            },
-            QRCode : {
-                offset_x: radius,
-                offset_y: radius-10,
-            }
-        },
-        "square1" : {
-            shape: {
-                type: "rect",
-                radius: 140
-            },
-            title: {
-                offset_x: radius,
-                offset_y: radius-225,
-                fontsize: 20
-            },
-            subtitle : {
-                offset_x: radius,
-                offset_y: radius-100,
-                fontsize: 12
-            }
-        }
-    }
 
     let bgColor = document.getElementById("backgroundColor").value;
     let textColor = document.getElementById("textColor").value;
@@ -259,7 +289,8 @@ function updateCode(updateCodeToo = true) {
     let title = "textTitle"; //The circle and square default titles are different
     if(def.shape.type === "circle") {
         ctx.beginPath();
-        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        ctx.arc(radius, radius, radius, 0, 2 * Math.PI, false);
+        ctx.closePath();
         ctx.fill();
     } else {
         roundRect(ctx,0,0,size, size, def.shape.radius, true, false);
@@ -270,12 +301,22 @@ function updateCode(updateCodeToo = true) {
     let safetyMarginShow = document.getElementById("safetyMarginShow").checked;
     let safetyMargin = document.getElementById("safetyMargin").value;
     if(safetyMarginShow) {
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius - safetyMargin * 2, 0, 2 * Math.PI, false);
         ctx.lineWidth = 2;
         ctx.strokeStyle = '#FF0000';
-        ctx.stroke();
+        if(def.shape.type === "circle") {
+            ctx.beginPath();
+            ctx.arc(radius, radius, radius - safetyMargin * 2, 0, 2 * Math.PI, false);
+            ctx.closePath();
+            ctx.stroke();
+        } else {
+            //ctx.closePath();
+            //roundRect(ctx,safetyMargin,safetyMargin,size - safetyMargin * 2, size - safetyMargin * 2, 0, false, true);
+            //ctx.stroke();
+        }
     }
+
+    //Update any logotype/image
+    drawImage();
 
     //Generate the texts
     let text = getText(title);
@@ -310,9 +351,6 @@ function updateCode(updateCodeToo = true) {
 
     //Generate a base QR-code
     updateQR();
-
-    //Update any logotype/image
-    drawImage();
 }
 
 function writeText(txt, x, y, fontSize = 0) {
