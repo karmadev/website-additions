@@ -17,7 +17,7 @@ tempImage.onload = function () {
     drawImage();
 }
 
-tempImage.src = "images/powered.png";
+tempImage.src = "https://raw.githubusercontent.com/karmadev/website-additions/master/images/powered.png";
 
 WebFont.load({
     google: {
