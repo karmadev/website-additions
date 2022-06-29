@@ -19,7 +19,7 @@ let karmaLogo;
 let defaults = {
     "circle":
         {
-            "name": "Acrylic circle",
+            "name": "Acrylic circle fish",
             "print_size": "10cm x 10cm",
             "canvas_w": 1000,
             "canvas_h": 1000,
