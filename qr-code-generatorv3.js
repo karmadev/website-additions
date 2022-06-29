@@ -8,7 +8,6 @@ let size = canvas.width;
 let radius = size/2;
 
 let sizeMultiplier = 3.527777366203752; //From 283px to 1000 in this tool!
-let centerRadiusOffset = 3.2;
 
 let imageLogo;
 let karmaLogo;
@@ -19,7 +18,7 @@ let karmaLogo;
 let defaults = {
     "circle":
         {
-            "name": "Acrylic circle fish",
+            "name": "Acrylic circle",
             "print_size": "10cm x 10cm",
             "canvas_w": 1000,
             "canvas_h": 1000,
@@ -207,11 +206,23 @@ function init() {
         container.innerHTML += `<div><input type='radio' id='${val}' name='design' value='${val}' checked><label for='${val}'>${design.name}</label> <span style='font-size:12px;color:#aaa;'>${design.print_size}</span></div>`;
     })
 
-    //Update the texts
-    updateTexts();
+    updateTexts(); //Update the texts
+    updateColors(); //Update the colors
 
     //Load the Karma logo - this will trigger the onloaded function that will render the code
     tempImage.src = "https://raw.githubusercontent.com/karmadev/website-additions/master/images/powered.png";
+}
+
+function lerp(start, end, amt){
+    return (1-amt)*start+amt*end
+}
+
+function resizeCanvasView() {
+    let value = document.getElementById("zoom").value;
+    let w = lerp(0,canvas.width, value);
+    let h = lerp(0,canvas.height, value);
+    //canvas.style.width = `${w}px`;
+    //canvas.style.height = `${h}px`;
 }
 
 const coverImg = (img, type, winW, winH, offsetX, offsetY, context) => {
@@ -352,6 +363,21 @@ function getText(name) {
     }
 }
 
+function updateColors() {
+    let defaultColors = document.getElementById("defaultColorsForQR").checked;
+    if(defaultColors) {
+        //Set the QR-colors to text and bg colors
+        let bgColor = document.getElementById("backgroundColor").value;
+        let textColor = document.getElementById("textColor").value;
+
+        document.getElementById("qrColor").value = textColor;
+        document.getElementById("qrBackgroundColor").value = bgColor;
+        document.getElementById("qrCodeColorsContainer").style.display = "none";
+    } else {
+        document.getElementById("qrCodeColorsContainer").style.display = "block";
+    }
+}
+
 function updateTexts() {
     let defaultTexts = document.getElementById("defaultTexts").checked;
 
@@ -389,6 +415,8 @@ function updateCode() {
     //Update the canvas size
     canvas.width = def.canvas_w;
     canvas.height = def.canvas_h;
+
+    resizeCanvasView(); //Resize the zoomed view
 
     size = canvas.width;
     radius = size/2;
@@ -485,7 +513,7 @@ function updateQR() {
 
     let text = document.getElementById("storefrontURL").value;
 
-    let bgColor = document.getElementById("backgroundColor").value;
+    let bgColor = document.getElementById("qrBackgroundColor").value;
     let qrColor = document.getElementById("qrColor").value;
 
     let qrSize = def.QRCode.size * sizeMultiplier;
