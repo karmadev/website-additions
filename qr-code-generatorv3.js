@@ -210,7 +210,17 @@ function init() {
     updateColors(); //Update the colors
 
     //Load the Karma logo - this will trigger the onloaded function that will render the code
-    tempImage.src = "https://raw.githubusercontent.com/karmadev/website-additions/master/images/powered.png";
+    updateKarmaLogotype();
+}
+
+function updateKarmaLogotype() {
+    let selected = document.getElementById("karmaLogoColor").value;
+    if(selected === 'white') {
+        tempImage.src = "https://raw.githubusercontent.com/karmadev/website-additions/master/images/powered.png";
+    } else {
+        tempImage.src = "https://raw.githubusercontent.com/karmadev/website-additions/master/images/powered_black.png";
+    }
+    drawImage();
 }
 
 function lerp(start, end, amt){
